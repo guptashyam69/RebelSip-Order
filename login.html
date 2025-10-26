@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mineral Water Sales Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-card h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .login-card .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .login-form {
+            text-align: left;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-left h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            color: #666;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info p {
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ee5a6f;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .product-item {
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .product-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .product-item h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .product-item .price {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-control button {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background 0.3s;
+        }
+
+        .quantity-control button:hover {
+            background: #764ba2;
+        }
+
+        .quantity-control input {
+            width: 60px;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .order-summary {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .order-summary h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+
+        .orders-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .order-card {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .order-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .order-card p {
+            color: #666;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .credentials-box {
+            background: #e7f3ff;
+            border: 2px solid #2196F3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .credentials-box h4 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        .credentials-box p {
+            color: #333;
+            margin: 5px 0;
+            font-family: monospace;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .login-card {
+                padding: 30px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .user-info {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <h1>💧</h1>
+            <h1>Sales Portal</h1>
+            <p class="subtitle">Premium Mineral Water</p>
+            
+            <div id="loginAlert"></div>
+
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            
+        </div>
+    </div>
+
+    <div id="mainPortal" class="hidden">
+        <div class="container">
+            <div class="header">
+                <div class="header-left">
+                    <h1>💧 Premium Mineral Water</h1>
+                    <p>Sales Order Portal</p>
+                </div>
+                <div class="user-info">
+                    <p>👤 <span id="loggedInUser"></span></p>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+
+            <div id="mainAlert"></div>
+
+            <div class="main-content">
+                <div class="card">
+                    <h2>New Order</h2>
+                    
+                    <div class="form-group">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" id="customerName" placeholder="Enter customer name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerPhone">Phone Number</label>
+                        <input type="tel" id="customerPhone" placeholder="Enter phone number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerAddress">Delivery Address</label>
+                        <textarea id="customerAddress" rows="3" placeholder="Enter delivery address" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="advanceReceived">Advance Received (₹)</label>
+                        <input type="number" id="advanceReceived" placeholder="Enter advance amount" min="0" value="0">
+                    </div>
+
+                    <h3 style="margin: 20px 0; color: #667eea;">Select Products</h3>
+
+                    <div class="product-grid">
+                        <div class="product-item">
+                            <h3>200ml Bottle</h3>
+                            <p class="price">₹215 / bottle</p>
+                            <div class="quantity-control">
+                                <button type="button" onclick="updateQuantity('200ml', -1)">-</button>
+                                <input type="number" id="qty-200ml" value="0" min="0" readonly>
+                                <button type="button" onclick="updateQuantity('200ml', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="product-item">
+                            <h3>500ml Bottle</h3>
+                            <p class="price">₹190 / bottle</p>
+                            <div class="quantity-control">
+                                <button type="button" onclick="updateQuantity('500ml', -1)">-</button>
+                                <input type="number" id="qty-500ml" value="0" min="0" readonly>
+                                <button type="button" onclick="updateQuantity('500ml', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="product-item">
+                            <h3>1000ml Bottle</h3>
+                            <p class="price">₹170 / bottle</p>
+                            <div class="quantity-control">
+                                <button type="button" onclick="updateQuantity('1000ml', -1)">-</button>
+                                <input type="number" id="qty-1000ml" value="0" min="0" readonly>
+                                <button type="button" onclick="updateQuantity('1000ml', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-summary">
+                        <h3>Order Summary</h3>
+                        <div class="summary-item">
+                            <span>Total Items:</span>
+                            <span id="totalItems">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Total Amount:</span>
+                            <span id="totalAmount">₹0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Advance Received:</span>
+                            <span id="advanceSummary">₹0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Balance Due:</span>
+                            <span id="balanceDue">₹0</span>
+                        </div>
+                    </div>
+
+                    <button class="btn" onclick="submitOrder()" id="submitBtn">Place Order</button>
+                </div>
+
+                <div class="card">
+                    <h2>Today's Orders</h2>
+                    <div class="orders-list" id="ordersList">
+                        <p style="text-align: center; color: #999; padding: 40px 0;">No orders yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ REPLACE WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzO-1t73TylhG8Re8bsceoKlTGYHtp2nJ4x2l8NsYaCR8DUMfCziV4IwAVzwtqDukXdnw/exec';
+        
+        const users = {
+            'ajay': { password: 'ajay@123', name: 'Sales Person 1' },
+            'shyam': { password: 'shyam@123', name: 'Sales Person 2' },
+            'raj': { password: 'raj@123', name: 'Sales Person 3' },
+            'admin': { password: 'admin123', name: 'Administrator' }
+        };
+
+        const products = {
+            '200ml': { price: 215, name: '200ml Bottle' },
+            '500ml': { price: 190, name: '500ml Bottle' },
+            '1000ml': { price: 170, name: '1000ml Bottle' }
+        };
+
+        let orders = [];
+        let currentUser = null;
+
+        window.onload = function() {
+            const savedUser = sessionStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainPortal();
+            }
+            
+            // Add event listener for advance received input
+            const advanceInput = document.getElementById('advanceReceived');
+            if (advanceInput) {
+                advanceInput.addEventListener('input', updateSummary);
+            }
+        };
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (users[username] && users[username].password === password) {
+                currentUser = {
+                    username: username,
+                    name: users[username].name
+                };
+                sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showMainPortal();
+            } else {
+                showAlert('loginAlert', 'Invalid username or password', 'error');
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            sessionStorage.removeItem('currentUser');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('mainPortal').classList.add('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function showMainPortal() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainPortal').classList.remove('hidden');
+            document.getElementById('loggedInUser').textContent = currentUser.name;
+            updateSummary();
+        }
+
+        function showAlert(elementId, message, type) {
+            const alertDiv = document.getElementById(elementId);
+            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => {
+                alertDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        function updateQuantity(product, change) {
+            const input = document.getElementById(`qty-${product}`);
+            let currentValue = parseInt(input.value);
+            currentValue = Math.max(0, currentValue + change);
+            input.value = currentValue;
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let totalItems = 0;
+            let totalAmount = 0;
+
+            for (let product in products) {
+                const qty = parseInt(document.getElementById(`qty-${product}`).value);
+                totalItems += qty;
+                totalAmount += qty * products[product].price;
+            }
+
+            const advanceReceived = parseInt(document.getElementById('advanceReceived').value) || 0;
+            const balanceDue = Math.max(0, totalAmount - advanceReceived);
+
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('totalAmount').textContent = `₹${totalAmount}`;
+            document.getElementById('advanceSummary').textContent = `₹${advanceReceived}`;
+            document.getElementById('balanceDue').textContent = `₹${balanceDue}`;
+        }
+
+        async function submitOrder() {
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerAddress = document.getElementById('customerAddress').value.trim();
+            const advanceReceived = parseInt(document.getElementById('advanceReceived').value) || 0;
+
+            if (!customerName || !customerPhone || !customerAddress) {
+                showAlert('mainAlert', 'Please fill in all customer details', 'error');
+                return;
+            }
+
+            let orderItems = [];
+            let totalAmount = 0;
+
+            for (let product in products) {
+                const qty = parseInt(document.getElementById(`qty-${product}`).value);
+                if (qty > 0) {
+                    orderItems.push({
+                        product: products[product].name,
+                        quantity: qty,
+                        price: products[product].price,
+                        total: qty * products[product].price
+                    });
+                    totalAmount += qty * products[product].price;
+                }
+            }
+
+            if (orderItems.length === 0) {
+                showAlert('mainAlert', 'Please select at least one product', 'error');
+                return;
+            }
+
+            const order = {
+                id: Date.now(),
+                customerName,
+                customerPhone,
+                customerAddress,
+                items: orderItems,
+                totalAmount,
+                advanceReceived,
+                balanceDue: totalAmount - advanceReceived,
+                salesPerson: currentUser.name,
+                date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+            };
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            const success = await sendToGoogleSheets(order);
+
+            orders.unshift(order);
+            displayOrders();
+            resetForm();
+
+            if (success) {
+                showAlert('mainAlert', '✅ Order placed successfully and saved to Google Sheets!', 'success');
+            } else {
+                showAlert('mainAlert', '⚠️ Order saved locally. Google Sheets sync may have failed.', 'error');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Place Order';
+        }
+
+        async function sendToGoogleSheets(order) {
+            if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+                console.warn('Google Sheets URL not configured');
+                return false;
+            }
+
+            try {
+                const payload = {
+                    orderId: order.id.toString(),
+                    date: order.date,
+                    salesPerson: order.salesPerson,
+                    customerName: order.customerName,
+                    customerPhone: order.customerPhone,
+                    customerAddress: order.customerAddress,
+                    items: order.items.map(item => `${item.product} x${item.quantity} = ₹${item.total}`).join(', '),
+                    totalAmount: order.totalAmount.toString(),
+                    advanceReceived: (order.advanceReceived || 0).toString(),
+                    balanceDue: (order.balanceDue || order.totalAmount).toString()
+                };
+
+                console.log('Sending to Google Sheets:', payload);
+                console.log('Order object:', order);
+
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log('Request sent successfully');
+                return true;
+
+            } catch (error) {
+                console.error('Error sending to Google Sheets:', error);
+                return false;
+            }
+        }
+
+        function displayOrders() {
+            const ordersList = document.getElementById('ordersList');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<p style="text-align: center; color: #999; padding: 40px 0;">No orders yet</p>';
+                return;
+            }
+
+            ordersList.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <h4>${order.customerName}</h4>
+                    <p><strong>Phone:</strong> ${order.customerPhone}</p>
+                    <p><strong>Address:</strong> ${order.customerAddress}</p>
+                    <p><strong>Items:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        ${order.items.map(item => `
+                            <li>${item.product} x ${item.quantity} = ₹${item.total}</li>
+                        `).join('')}
+                    </ul>
+                    <p><strong>Total: ₹${order.totalAmount}</strong></p>
+                    <p><strong>Advance: ₹${order.advanceReceived}</strong></p>
+                    <p style="color: ${order.balanceDue > 0 ? '#ff4757' : '#2ed573'}; font-weight: bold;"><strong>Balance Due: ₹${order.balanceDue}</strong></p>
+                    <p style="font-size: 0.8em; color: #999;">${order.date} | By: ${order.salesPerson}</p>
+                </div>
+            `).join('');
+        }
+
+        function resetForm() {
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('customerAddress').value = '';
+            document.getElementById('advanceReceived').value = '0';
+            
+            for (let product in products) {
+                document.getElementById(`qty-${product}`).value = '0';
+            }
+            
+            updateSummary();
+        }
+    </script>
+</body>
+</html>
